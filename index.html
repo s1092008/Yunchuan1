@@ -17,6 +17,10 @@
     <div id="ship"></div>
 
     <script>
+      const test = document.getElementById("ship");
+      test.onclick = function () {
+        alert("nono!");
+      };
       if (typeof DeviceOrientationEvent.requestPermission === "function") {
         DeviceOrientationEvent.requestPermission()
           .then((permissionState) => {
