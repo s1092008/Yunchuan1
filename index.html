@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gyro Game</title>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.css"
+    />
     <style>
       #ship {
         width: 50px;
@@ -11,33 +15,103 @@
         background-color: blue;
         position: absolute;
       }
+      .sun {
+        width: 10em;
+        height: 10em;
+        background: radial-gradient(
+          circle,
+          rgba(255, 141, 0, 1) 55%,
+          rgba(255, 86, 0, 1) 87%,
+          rgba(255, 46, 0, 1) 97%
+        );
+        border-radius: 50%;
+        box-shadow: 0 0 5em rgba(255, 141, 0, 1);
+        position: absolute;
+      }
+      .bk {
+        display: flex;
+        width: 100vw;
+        height: 50vh;
+        justify-content: center;
+
+        /* flex: 1; */
+      }
+      .container {
+        display: flex;
+        width: 100vw;
+        justify-items: center;
+      }
+      .maininter {
+        background-color: aquamarine;
+      }
+      #ocean {
+        position: absolute;
+        width: 100%;
+        min-height: 50%;
+        z-index: -1;
+        bottom: 0;
+      }
+
+      .wave {
+        background: #a8e3ff;
+        display: inline-block;
+        height: 60%;
+        width: 10px;
+        position: absolute;
+        animation-name: dostuff;
+        animation-duration: 3s;
+        animation-iteration-count: infinite;
+        transition-timing-function: ease-in-out;
+        z-index: 1;
+      }
+
+      @keyframes dostuff {
+        0% {
+          height: 80%;
+        }
+        50% {
+          height: 60%;
+        }
+        100% {
+          height: 80%;
+        }
+      }
     </style>
   </head>
   <body>
-    <div id="ship"></div>
+    <div class="container row">
+      <div class="bk mt-5">
+        <div class="sun"></div>
+      </div>
+      <div class="maininter row">
+        <div id="ship"></div>
+      </div>
+      <div id="ocean"></div>
+    </div>
 
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       const test = document.getElementById("ship");
       test.onclick = function () {
         alert("nono!");
       };
-      if (typeof DeviceOrientationEvent.requestPermission === "function") {
-        DeviceOrientationEvent.requestPermission()
-          .then((permissionState) => {
-            if (permissionState === "granted") {
-              // 用户已授权使用陀螺仪
-              startGyroGame();
-            } else {
-              // 用户拒绝了请求或权限不可用
-              alert("Permission denied for using device orientation.");
-            }
-          })
-          .catch(console.error);
-      } else {
-        alert(
-          "Device orientation not supported or permission API not available."
-        );
-      }
+      // if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      //   DeviceOrientationEvent.requestPermission()
+      //     .then((permissionState) => {
+      //       if (permissionState === "granted") {
+      //         // 用户已授权使用陀螺仪
+      //         startGyroGame();
+      //       } else {
+      //         // 用户拒绝了请求或权限不可用
+      //         alert("Permission denied for using device orientation.");
+      //       }
+      //     })
+      //     .catch(console.error);
+      // } else {
+      //   alert(
+      //     "Device orientation not supported or permission API not available."
+      //   );
+      // }
 
       function startGyroGame() {
         window.addEventListener("deviceorientation", handleOrientation);
@@ -57,6 +131,23 @@
         ship.style.left = `${50 + movementLR}px`; // 船只左右移动
         ship.style.top = `${50 + movementFB}px`; // 船只上下移动
       }
+    </script>
+    <script>
+      // make some waves.
+      var ocean = document.getElementById("ocean"),
+        waveWidth = 10,
+        waveCount = Math.floor(window.innerWidth / waveWidth),
+        docFrag = document.createDocumentFragment();
+      console.log(waveCount);
+
+      for (var i = 0; i < waveCount; i++) {
+        var wave = document.createElement("div");
+        wave.className += " wave";
+        docFrag.appendChild(wave);
+        wave.style.left = i * waveWidth + "px";
+        wave.style.webkitAnimationDelay = i / 100 + "s";
+      }
+      ocean.appendChild(docFrag);
     </script>
   </body>
 </html>
